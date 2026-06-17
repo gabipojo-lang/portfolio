@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Interview Practice Tool | Gabriela Reis</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap');
+    :root { --green: #1a3a2a; --green-mid: #2d5a3d; --gold: #c9a84c; --ivory: #f5f0e8; --ivory-dark: #e8e0d0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--ivory); font-family: 'Inter', sans-serif; font-weight: 300; color: #1a1a1a; min-height: 100vh; }
+    nav { background-color: var(--green); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    nav .brand { font-family: 'Playfair Display', serif; color: var(--ivory); text-decoration: none; font-size: 1.1rem; }
+    nav .back { color: var(--ivory-dark); text-decoration: none; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    nav .back:hover { color: var(--gold); }
+    .hero { background: linear-gradient(135deg, var(--green), var(--green-mid)); color: var(--ivory); padding: 3rem 2rem; text-align: center; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--ivory); margin-bottom: 0.4rem; }
+    .hero p { color: var(--ivory-dark); font-size: 0.92rem; max-width: 500px; margin: 0 auto; }
+    .container { max-width: 800px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .tip { background: var(--ivory-dark); border-left: 3px solid var(--green-mid); padding: 0.9rem 1.2rem; font-size: 0.84rem; color: #555; margin-bottom: 2rem; }
+    .tip strong { color: var(--green); }
+    .controls { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.8rem; align-items: flex-end; }
+    .ctrl-group { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-width: 160px; }
+    label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; color: var(--green-mid); }
+    select { padding: 0.6rem 0.9rem; border: 1.5px solid var(--ivory-dark); background: white; font-family: 'Inter', sans-serif; font-size: 0.88rem; color: #1a1a1a; cursor: pointer; }
+    select:focus { outline: 2px solid var(--green-mid); }
+    .gen-btn { padding: 0.6rem 1.6rem; background-color: var(--green); color: var(--ivory); border: none; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background-color 0.2s; height: 40px; align-self: flex-end; }
+    .gen-btn:hover { background-color: var(--green-mid); }
+    .gen-btn:disabled { background-color: #999; cursor: not-allowed; }
+    .case-card { background: white; border-left: 4px solid var(--gold); padding: 1.8rem; margin-bottom: 1.4rem; display: none; }
+    .case-card.show { display: block; }
+    .case-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); font-weight: 500; margin-bottom: 0.6rem; }
+    .case-card h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--green); margin-bottom: 0.8rem; }
+    .case-card p { font-size: 0.92rem; color: #3a3a3a; line-height: 1.7; }
+    .response-area { margin-bottom: 1.4rem; display: none; }
+    .response-area.show { display: block; }
+    textarea { width: 100%; min-height: 140px; padding: 0.9rem; border: 1.5px solid var(--ivory-dark); font-family: 'Inter', sans-serif; font-size: 0.88rem; line-height: 1.6; resize: vertical; background: white; }
+    textarea:focus { outline: 2px solid var(--green-mid); }
+    .fb-btn { padding: 0.6rem 1.6rem; background: transparent; color: var(--green); border: 1.5px solid var(--green); font-family: 'Inter', sans-serif; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 0.8rem; }
+    .fb-btn:hover { background: var(--green); color: var(--ivory); }
+    .fb-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .feedback-card { background: var(--green); color: var(--ivory); padding: 1.8rem; margin-top: 1.4rem; display: none; }
+    .feedback-card.show { display: block; }
+    .feedback-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 0.8rem; }
+    .feedback-card p { font-size: 0.9rem; line-height: 1.75; color: var(--ivory-dark); white-space: pre-wrap; }
+    .reset-btn { margin-top: 1.2rem; padding: 0.4rem 1rem; background: none; border: 1px solid rgba(255,255,255,0.3); font-family: 'Inter', sans-serif; font-size: 0.78rem; color: var(--ivory-dark); cursor: pointer; text-transform: uppercase; letter-spacing: 0.08em; }
+    .reset-btn:hover { border-color: var(--gold); color: var(--gold); }
+    footer { background: #111; color: var(--ivory-dark); text-align: center; padding: 1.5rem; font-size: 0.78rem; margin-top: 3rem; }
+    footer a { color: var(--gold); text-decoration: none; }
+    @media (max-width: 580px) { .hero h1 { font-size: 1.6rem; } .controls { flex-direction: column; } .gen-btn { width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="brand" href="index.html">Gabriela Reis</a>
+    <a class="back" href="scratch_page.html">Back to Passion Page</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Case Interview Practice Tool</h1>
+    <p>Get a realistic case prompt, write your structured response, and receive coaching feedback.</p>
+  </div>
+
+  <div class="container">
+
+    <div class="tip"><strong>How to use:</strong> Select a case type and difficulty, generate a prompt, write your response using a structured framework, then request feedback.</div>
+
+    <div class="controls">
+      <div class="ctrl-group">
+        <label for="caseType">Case Type</label>
+        <select id="caseType">
+          <option value="market sizing">Market Sizing</option>
+          <option value="profitability">Profitability</option>
+          <option value="market entry">Market Entry</option>
+          <option value="merger">M&A / Due Diligence</option>
+          <option value="operations">Operations / Process</option>
+          <option value="growth">Growth Strategy</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="beginner">Beginner</option>
+          <option value="intermediate" selected>Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="genBtn" onclick="generateCase()">Generate Case</button>
+    </div>
+
+    <div class="case-card" id="caseCard">
+      <div class="case-tag" id="caseTag"></div>
+      <h2 id="caseTitle"></h2>
+      <p id="caseBody"></p>
+    </div>
+
+    <div class="response-area" id="responseArea">
+      <label for="userResponse">Your Structured Response</label><br /><br />
+      <textarea id="userResponse" placeholder="Walk through your framework. Define the problem, state your hypothesis, identify key drivers, and outline your approach. Aim for a clear, structured answer..."></textarea>
+      <br />
+      <button class="fb-btn" id="fbBtn" onclick="getFeedback()">Get Feedback</button>
+    </div>
+
+    <div class="feedback-card" id="feedbackCard">
+      <h3>Coaching Feedback</h3>
+      <p id="feedbackText"></p>
+      <button class="reset-btn" onclick="resetTool()">Try Another Case</button>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Gabriela Lins dos Reis &nbsp;|&nbsp; <a href="scratch_page.html">Women in Strategy</a> &nbsp;|&nbsp; <a href="index.html">Portfolio</a></p>
+  </footer>
+
+  <script>
+    const cases = {
+      "market sizing": {
+        beginner: { title: "Coffee Shops in Salt Lake City", body: "Your client wants to open a new coffee shop chain in Salt Lake City, Utah. Before moving forward, they want to understand the market. How many cups of coffee are sold per day across all coffee shops in Salt Lake City?" },
+        intermediate: { title: "Ride-Share Market in Brazil", body: "A major ride-share company is considering expanding into mid-sized Brazilian cities outside Sao Paulo and Rio de Janeiro. Estimate the total number of ride-share trips taken per day in these secondary markets, and identify what factors would most influence your estimate." },
+        advanced: { title: "Global Strategy Consulting Market", body: "A private equity firm is evaluating an acquisition of a boutique strategy consulting firm. Estimate the total addressable market for strategy consulting services globally, broken down by client segment and geography, and identify which segments represent the highest growth opportunity." }
+      },
+      "profitability": {
+        beginner: { title: "RetailCo Margin Decline", body: "Your client is a mid-sized retail clothing chain that has seen its profit margins decline from 15% to 8% over the past two years despite flat revenue. The CEO has asked your team to identify the root cause and recommend a path to restoring margins." },
+        intermediate: { title: "FoodCo Restaurant Chain", body: "Your client operates a 200-location fast casual restaurant chain. Over the past 18 months, same-store profitability has dropped 20% even as customer traffic remained stable. Leadership suspects rising costs, but has not identified the specific drivers. How would you structure your analysis?" },
+        advanced: { title: "MedTech Device Manufacturer", body: "A medical device manufacturer has seen EBITDA margins compress from 28% to 19% over three years. Revenue has grown 12% annually, but profitability has not kept pace. The CFO believes the issue may be product mix, pricing pressure, or operational inefficiency. Develop a hypothesis-driven approach to diagnose and resolve the problem." }
+      },
+      "market entry": {
+        beginner: { title: "Fitness App Entering Latin America", body: "A US-based fitness app with 5 million subscribers wants to expand into Latin America. They have asked you to help them decide whether to enter Brazil first, and if so, how to approach the market entry." },
+        intermediate: { title: "European Grocery Chain in the US", body: "A leading European discount grocery chain is evaluating entry into the US market. They have been successful in Germany and the UK but have no US presence. What framework would you use to assess whether and how they should enter, and what would your initial recommendation be?" },
+        advanced: { title: "B2B SaaS Platform in Southeast Asia", body: "Your client is a B2B enterprise software company with dominant market share in North America. They are considering entering Southeast Asia, specifically targeting Singapore, Indonesia, and Vietnam. Develop a market entry strategy that accounts for competitive dynamics, regulatory environment, and go-to-market approach." }
+      },
+      "merger": {
+        beginner: { title: "TechCo Acquires a Startup", body: "Your client, a large technology company, is considering acquiring a 3-year-old SaaS startup for $80 million. The startup has $4 million in ARR and is growing 80% year over year but is not yet profitable. Walk me through how you would evaluate this acquisition." },
+        intermediate: { title: "Retail Merger Integration", body: "Two regional grocery chains have agreed to merge. Combined, they will operate 340 stores across the western United States. Your client is the acquiring company and wants to understand how to capture $150 million in projected synergies over three years without losing customers or key talent." },
+        advanced: { title: "Cross-Border Financial Services Merger", body: "A US-based asset management firm is acquiring a European private wealth management firm for $2.1 billion. The deal is expected to close in 6 months. Identify the key due diligence priorities, integration risks, and synergy levers, and outline a 100-day post-merger plan." }
+      },
+      "operations": {
+        beginner: { title: "Hospital Patient Wait Times", body: "A regional hospital system has seen average patient wait times in its emergency department increase from 45 minutes to 2.5 hours over the past year. Patient satisfaction scores have dropped significantly. How would you approach diagnosing and solving this problem?" },
+        intermediate: { title: "E-Commerce Fulfillment Center", body: "Your client runs a major e-commerce platform and is experiencing a 12% order defect rate at its largest fulfillment center, compared to a 3% benchmark at other centers. Customer complaints about late and incorrect orders have tripled. What is driving this, and how would you fix it?" },
+        advanced: { title: "Global Supply Chain Redesign", body: "A consumer electronics manufacturer is facing a 40% increase in supply chain costs following geopolitical disruptions and rising raw material prices. Their current supply chain relies heavily on single-source suppliers in one region. Design a supply chain resilience strategy that balances cost, risk, and speed to market." }
+      },
+      "growth": {
+        beginner: { title: "Local Bakery Expansion", body: "Your client owns a highly successful single-location artisan bakery in Provo, Utah with $800K in annual revenue and strong margins. They want to grow revenue by 50% in the next two years. What growth options would you consider and how would you prioritize them?" },
+        intermediate: { title: "DTC Skincare Brand", body: "A direct-to-consumer skincare brand has grown to $25 million in revenue primarily through Instagram and TikTok. Growth has plateaued over the past two quarters. The founder wants to reach $75 million within three years. Develop a growth strategy and identify the key risks." },
+        advanced: { title: "B2B Software Platform at Scale", body: "Your client is a B2B analytics platform with $120 million in ARR, 85% gross margins, and 110% net revenue retention. They are preparing for an IPO in 18 months and need to demonstrate a credible path to $300 million ARR. Develop a growth strategy across new markets, products, and customer segments." }
+      }
+    };
+
+    const feedback = {
+      structure: [
+        "Your response shows solid instincts around structuring the problem. To sharpen this further, lead with a clear hypothesis before diving into your framework — interviewers want to see you think directionally from the start, not just organize information.",
+        "The structure of your response is on the right track. Consider making your framework more explicitly MECE — each bucket should be mutually exclusive and cover the full problem space. Right now there is some overlap between your categories that could create confusion in a live interview.",
+        "You demonstrated a logical flow through the problem. One area to develop: transitions. In a real case, you want to signal clearly when you are moving from diagnosis to recommendation, and tie your final answer back to the client's original question."
+      ],
+      communication: [
+        "Your communication is clear and easy to follow. In a live setting, aim to be even more concise in your initial framing — summarize the client situation in one or two sentences before launching into your structure. This shows confidence and keeps the interviewer engaged.",
+        "The language you used is appropriately professional and business-focused. To elevate further, practice quantifying your statements where possible — even rough estimates show business acumen and make your recommendations more credible.",
+        "Your response reads well on paper. In a verbal case, remember to pause and check in with the interviewer before going deep on any one branch of your framework. This collaborative approach is something top candidates do consistently."
+      ],
+      insight: [
+        "You identified several of the key drivers. The strongest candidates go one level deeper — for each driver you name, consider what data you would need to test it and what the answer would imply for the recommendation.",
+        "Your insights reflect solid business judgment. The area to push further is prioritization — not all drivers are equal, and interviewers want to see you distinguish between the factors that are most likely to explain the problem and those that are secondary.",
+        "You covered the main levers well. One insight worth adding: always close with a so-what. What does your analysis mean for the client's decision, and what would you recommend they do first?"
+      ]
+    };
+
+    function generateCase() {
+      const type = document.getElementById('caseType').value;
+      const diff = document.getElementById('difficulty').value;
+      const btn = document.getElementById('genBtn');
+
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+
+      document.getElementById('caseCard').classList.remove('show');
+      document.getElementById('responseArea').classList.remove('show');
+      document.getElementById('feedbackCard').classList.remove('show');
+      document.getElementById('userResponse').value = '';
+
+      setTimeout(() => {
+        const c = cases[type][diff];
+        const typeLabel = type.replace(/\b\w/g, l => l.toUpperCase());
+        const diffLabel = diff.charAt(0).toUpperCase() + diff.slice(1);
+
+        document.getElementById('caseTag').textContent = typeLabel + ' · ' + diffLabel;
+        document.getElementById('caseTitle').textContent = c.title;
+        document.getElementById('caseBody').textContent = c.body;
+        document.getElementById('caseCard').classList.add('show');
+        document.getElementById('responseArea').classList.add('show');
+
+        btn.disabled = false;
+        btn.textContent = 'Generate Case';
+      }, 800);
+    }
+
+    function getFeedback() {
+      const response = document.getElementById('userResponse').value.trim();
+      if (response.length < 30) {
+        alert('Please write a more complete response first.');
+        return;
+      }
+
+      const btn = document.getElementById('fbBtn');
+      btn.disabled = true;
+      btn.textContent = 'Analyzing...';
+
+      setTimeout(() => {
+        const s = feedback.structure[Math.floor(Math.random() * 3)];
+        const c = feedback.communication[Math.floor(Math.random() * 3)];
+        const i = feedback.insight[Math.floor(Math.random() * 3)];
+
+        const full = "Structure & Framework\n" + s + "\n\nCommunication\n" + c + "\n\nInsights & Depth\n" + i + "\n\nOverall\nThis is a solid foundation. The candidates who stand out in consulting interviews are those who practice until their frameworks become second nature, freeing up mental bandwidth to engage with the nuance of the case. Keep iterating — the improvement from case 1 to case 20 is significant.";
+
+        document.getElementById('feedbackText').textContent = full;
+        document.getElementById('feedbackCard').classList.add('show');
+        document.getElementById('feedbackCard').scrollIntoView({ behavior: 'smooth' });
+
+        btn.disabled = false;
+        btn.textContent = 'Get Feedback';
+      }, 1200);
+    }
+
+    function resetTool() {
+      document.getElementById('caseCard').classList.remove('show');
+      document.getElementById('responseArea').classList.remove('show');
+      document.getElementById('feedbackCard').classList.remove('show');
+      document.getElementById('userResponse').value = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
